@@ -3,7 +3,7 @@ import axios from "axios";
 import { Form, Field, withFormik } from "formik";
 import * as Yup from "yup";
 
-const UserForm = ({ values, status}) => {
+const UserForm = ({ errors, touched, values, status}) => {
 
     const [user, setUser] = useState([]);
 
@@ -18,8 +18,23 @@ const UserForm = ({ values, status}) => {
             <h1>Sign Up</h1>
             <Form>
                 <Field type="text" name="name" placeholder="Name" />
+
+                {touched.name && errors.name && (
+                    <p className="error">{errors.name}</p>
+                )}
+
                 <Field type="text" name="email" placeholder="Email" />
+
+                {touched.email && errors.email && (
+                    <p className="error">{errors.email}</p>
+                )}
+
                 <Field type="password" name="password" placeholder="Password" />
+
+                {touched.password && errors.password && (
+                    <p className="error">{errors.password}</p>
+                )}
+
                 <Field component="select" className="role-select" name="role">
                     <option>Please Choose a Role</option>
                     <option value="Gryffindor">Gryffindor</option>
@@ -66,7 +81,9 @@ const UserForm = ({ values, status}) => {
 
     validationSchema: Yup.object().shape({
         name: Yup.string().required("Please Enter A Name"),
-        email: Yup.string().required("Please Enter An Email Address"),
+        email: Yup.string()
+            .required("Please Enter A Valid Email Address"),
+            // .matches(!'waffle@syrup.com'),
         password: Yup.string().min(6).required("Password Must be at least 6 Characters")
 
       }),
